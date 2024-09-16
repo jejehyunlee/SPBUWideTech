@@ -1,17 +1,44 @@
 package org.wide;
 
-import java.util.Scanner;
+import org.wide.entity.Kendaraan;
+import org.wide.entity.Transaksi;
+
+import java.util.*;
+
 public class Main {
 
-    public static void main(String[] args) {
-                Scanner scanner = new Scanner(System.in);
-                View view = new View();
-                Service service = new Service(view);
+    static Map<String, Kendaraan> pembeliTerdaftar = new HashMap<>();
+    static Scanner scanner = new Scanner(System.in);
+    static View view = new View();
+    static Service service = new Service(view);
 
+
+    public static void main(String[] args) {
+
+
+                System.out.print("Register Jumlah Pembeli : ");
                 int M = Integer.parseInt(scanner.nextLine().trim());
                 for (int i = 0; i < M; i++) {
-                    String[] parts = scanner.nextLine().split("-");
-                    service.daftarPembeli(parts[0], parts[1]);
+                    boolean inputValid = false;
+                    while (!inputValid){
+                        try {
+                            String[] parts = scanner.nextLine().split("-");
+                            String nama = parts[0].trim();
+                            String jenisKendaraan = parts[1].trim();
+
+                            if(service.isPembeliTerdaftar(nama, jenisKendaraan)){
+                                System.out.println("Nama : " + nama + " | Kendaraan : "+ jenisKendaraan + " Sudah Terdaftar");
+                            } else {
+                                service.daftarPembeli(nama, jenisKendaraan);
+                                inputValid = true;
+                                System.out.println("success registered");
+                            }
+                        } catch (Exception e) {
+                            inputValid = false;
+                            System.out.println("Error : " + e.getMessage());
+                            System.out.println("input tidak sesuai (ex = nama-jenis)");
+                        }
+                    }
                 }
 
                 while (scanner.hasNextLine()) {
@@ -28,11 +55,22 @@ public class Main {
                         service.isiUlang(input);
                     } else if (input.startsWith("cek;")) {
                         service.cekDataPembeli(input);
+                    }else if (input.startsWith("close")) {
+                        System.exit(200);
+                    }else if (input.startsWith("test")) {
+                        service.testConsole();
+                    }
+                    else {
+                        System.out.println("Kesalahan input");
                     }
                 }
 
                 scanner.close();
     }
+
+
+
+
 }
 
 

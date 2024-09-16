@@ -31,4 +31,10 @@ public class View {
                     + formattedDate);
         }
 
+
+        public void printToTerminal(Transaksi transaksi) {
+
+            System.out.println(transaksi.toString());
+
+        }
 }
